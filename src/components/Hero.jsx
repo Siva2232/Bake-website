@@ -4,7 +4,7 @@ import { ChevronRight, ChevronLeft, ArrowRight } from 'lucide-react';
 const SLIDES = [
   {
     id: 1,
-    title: "The Golden Croissant",
+    title: "Golden Croissant",
     tag: "SIGNATURE PATISSERIE",
     description: "Flaked to perfection with 72 layers of grass-fed cultured butter.",
     img: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=95&w=1920",

@@ -9,6 +9,7 @@ export const Navbar = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [email, setEmail] = useState(''); // for newsletter input
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   const navLinks = [
     'HOME',
@@ -39,6 +40,30 @@ export const Navbar = () => {
     // TODO: real submission logic (API call, toast, etc.)
     alert(`Subscribed with: ${email}`);
     setEmail('');
+  };
+
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setSearchQuery(val);
+    if (val.trim() === '') {
+      setFilteredProducts([]);
+    } else {
+      const q = val.toLowerCase();
+      setFilteredProducts(
+        PRODUCTS.filter((p) => p.name.toLowerCase().includes(q))
+      );
+    }
+  };
+
+  const handleSearchSelect = (product) => {
+    // close overlay and scroll to products section
+    setSearchQuery(product.name);
+    setShowSearch(false);
+    setFilteredProducts([]);
+    const el = document.getElementById('products');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    // optionally highlight or fire event for product
+    window.dispatchEvent(new CustomEvent('searchSelect', { detail: product }));
   };
 
   return (
@@ -161,7 +186,16 @@ export const Navbar = () => {
       <span className="text-[22px] font-bold">🍰</span>
       <span className="text-[10px] font-medium xs:text-[11px]">All Products</span>
     </button>
-          
+          <a
+        href="https://wa.me/919876543210" // ← change to your actual WhatsApp link (with country code)
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex flex-col items-center gap-1 text-zinc-700 hover:text-amber-800 active:text-amber-900 transition-colors touch-manipulation min-w-[60px]"
+        aria-label="WhatsApp"
+      >
+        <FaWhatsapp size={26} strokeWidth={1.5} /> {/* or use a WhatsApp icon from lucide-react-icons if available */}
+        <span className="text-[10px] font-medium xs:text-[11px]">WhatsApp</span>
+      </a>
     {/* Instagram */}
     <a
       href="https://instagram.com/yourprofile" // ← change to your actual profile
@@ -182,7 +216,11 @@ export const Navbar = () => {
       {showSearch && (
         <div className="fixed inset-0 z-[200] bg-white/98 flex flex-col items-center pt-20 sm:pt-32 px-5 sm:px-6 animate-in fade-in duration-500">
           <button
-            onClick={() => setShowSearch(false)}
+            onClick={() => {
+              setShowSearch(false);
+              setSearchQuery('');
+              setFilteredProducts([]);
+            }}
             className="absolute top-6 right-6 sm:top-10 sm:right-10 p-3 sm:p-4 hover:rotate-90 transition-transform duration-300"
           >
             <X size={28} strokeWidth={1} />
@@ -194,10 +232,43 @@ export const Navbar = () => {
             <input
               autoFocus
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && filteredProducts.length > 0) {
+                  handleSearchSelect(filteredProducts[0]);
+                }
+              }}
               className="w-full bg-transparent border-b border-zinc-300 py-5 sm:py-6 text-3xl sm:text-5xl md:text-6xl font-serif italic outline-none text-center placeholder:text-zinc-200"
               placeholder="Sourdough, Croissants..."
             />
+            {filteredProducts.length > 0 && (
+              <ul className="mt-8 max-h-80 overflow-y-auto w-full text-left">
+                {filteredProducts.map((prod) => (
+                  <li
+                    key={prod.id}
+                    className="flex items-center gap-3 py-3 px-4 border-b border-zinc-200 cursor-pointer hover:bg-zinc-100"
+                    onClick={() => handleSearchSelect(prod)}
+                  >
+                    <img
+                      src={prod.image}
+                      alt={prod.name}
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                    <div className="flex-1">
+                      <span className="block text-base font-medium text-zinc-800">
+                        {prod.name}
+                      </span>
+                      <span className="block text-sm text-zinc-500">
+                        {prod.price}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {searchQuery && filteredProducts.length === 0 && (
+              <p className="mt-8 text-center text-zinc-500">No products found</p>
+            )}
           </div>
         </div>
       )}

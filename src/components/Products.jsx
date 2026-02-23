@@ -24,6 +24,27 @@ export const PRODUCTS = [
 export const Products = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onSearch = (e) => {
+      const product = e.detail;
+      if (!product) return;
+      // make sure all tabs are visible so the item exists in DOM
+      setActiveTab('All');
+      // wait for render then scroll
+      setTimeout(() => {
+        const card = document.getElementById(`product-${product.id}`);
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // add highlight and a brief bulge animation
+          card.classList.add('ring', 'ring-amber-500', 'scale-105');
+          setTimeout(() => card.classList.remove('ring', 'ring-amber-500', 'scale-105'), 2000);
+        }
+      }, 300);
+    };
+    window.addEventListener('searchSelect', onSearch);
+    return () => window.removeEventListener('searchSelect', onSearch);
+  }, []);
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -83,6 +104,7 @@ export const Products = () => {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 lg:gap-x-10 gap-y-24">
           {filtered.map((product, idx) => (
             <div
+              id={`product-${product.id}`}
               key={product.id}
               className={`group flex flex-col h-full justify-between transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
               style={{ transitionDelay: `${idx * 150}ms` }}
