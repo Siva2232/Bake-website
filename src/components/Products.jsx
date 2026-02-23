@@ -1,106 +1,171 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { ShoppingCart, ArrowRight, } from 'lucide-react';
+import { FaWhatsapp } from "react-icons/fa";
+
+export const CATEGORIES = [
+  { 
+    name: "All", 
+    img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=400" 
+  },
+  { 
+    name: "Cakes", 
+    img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=400" 
+  },
+  { 
+    name: "Specialties", 
+    img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=400" 
+  },
+  { 
+    name: "Cupcakes", 
+    img: "https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&q=80&w=400" 
+  },
+  { 
+    name: "Pastries", 
+    img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=400" 
+  },
+  { 
+    name: "Boulangerie", 
+    img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=400" 
+  }
+];
+
+export const PRODUCTS = [
+  { id: 1, name: "Noir Chocolate Ganache", category: "Cakes", price: "₹499", image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=90&w=800" },
+  { id: 2, name: "Wild Strawberry Chantilly", category: "Specialties", price: "₹599", image: "https://images.unsplash.com/photo-1464347744102-11db6282f854?q=90&w=800" },
+  { id: 3, name: "Madagascar Vanilla Bean", category: "Cupcakes", price: "₹299", image: "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?q=90&w=800" },
+  { id: 4, name: "Pistachio Rose Macarons", category: "Pastries", price: "₹199", image: "https://images.unsplash.com/photo-1559181567-c3190ca9959b?q=90&w=800" },
+  { id: 5, name: "Golden Honey Croissants", category: "Boulangerie", price: "₹149", image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=90&w=800" },
+  { id: 6, name: "Velvet Red Raspberry", category: "Cakes", price: "₹549", image: "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?q=90&w=800" },
+];
 
 export const Products = () => {
-  const ref = useRef(null);
-  const [inView, setInView] = useState(false);
+  const [activeTab, setActiveTab] = useState("All");
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setInView(true);
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-    if (ref.current) observer.observe(ref.current);
+    const handler = (e) => {
+      setActiveTab(e.detail);
+    };
+    window.addEventListener('selectCategory', handler);
+    return () => window.removeEventListener('selectCategory', handler);
+  }, []);
+  const [visible, setVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) setVisible(true);
+    }, { threshold: 0.1 });
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  const items = [
-    { id: 1, name: "Noir Chocolate Ganache", category: "Cakes", price: "₹499", image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=600" },
-    { id: 2, name: "Wild Strawberry Chantilly", category: "Specialties", price: "₹599", image: "https://images.unsplash.com/photo-1464347744102-11db6282f854?q=80&w=600" },
-    { id: 3, name: "Madagascar Vanilla Bean", category: "Cupcakes", price: "₹299", image: "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?q=80&w=600" },
-    { id: 4, name: "Pistachio Rose Macarons", category: "Pastries", price: "₹199", image: "https://images.unsplash.com/photo-1559181567-c3190ca9959b?q=80&w=600" },
-    { id: 5, name: "Golden Honey Croissants", category: "Boulangerie", price: "₹149", image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=600" },
-    { id: 6, name: "Velvet Red Raspberry", category: "Cakes", price: "₹549", image: "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?q=80&w=600" },
-  ];
+  const handleWhatsApp = (productName) => {
+    const message = encodeURIComponent(`Hi, I'm interested in ordering the ${productName}. Could you provide more details?`);
+    window.open(`https://wa.me/91XXXXXXXXXX?text=${message}`, '_blank');
+  };
+
+  const filtered = activeTab === "All" ? PRODUCTS : PRODUCTS.filter(p => p.category === activeTab);
 
   return (
-    <section
-      id="products"
-      ref={ref}
-      className="py-32 bg-white px-6 overflow-hidden"
-    >
+    <section id="products" ref={sectionRef} className="bg-white py-32 px-6 lg:px-12 text-black overflow-hidden">
       <div className="max-w-7xl mx-auto">
         
-        {/* Header with Slide-In Animation */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
-          <div className={`max-w-xl ${inView ? 'animate-[slide-right_1s_ease-out]' : ''}`}>
-            <span className="text-[10px] font-bold tracking-[0.5em] text-pink-500 uppercase block mb-4">
-              The Artisan Vault
-            </span>
-            <h2 className="text-5xl md:text-7xl font-serif text-slate-900 leading-tight">
-              Signature <span className="italic text-pink-600 font-light">Creations</span>
-            </h2>
+        {/* --- STARK B&W HEADER --- */}
+        <div className={`mb-24 transition-all duration-1000 transform ${visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+          <div className="flex items-center gap-4 mb-6">
+            <div className="h-[2px] w-12 bg-black" />
+            <span className="text-[11px] font-black tracking-[0.5em] text-black uppercase">Established Excellence</span>
           </div>
-          <p className={`text-slate-400 text-sm font-light italic max-w-xs md:text-right ${inView ? 'animate-[fade-in_1.5s_ease-out_0.5s_both]' : ''}`}>
-            Hand-selected ingredients meeting world-class craftsmanship.
-          </p>
+          <h2 className="text-6xl md:text-8xl font-serif text-black leading-none mb-4">
+            The <span className="italic font-light">Curated</span> <br />
+            <span className="font-bold">Collection</span>
+          </h2>
         </div>
 
-        {/* Product Grid with Staggered Entrance */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-24 gap-x-12">
-          {items.map((item, index) => (
-            <div 
-              key={item.id} 
-              className={`group cursor-pointer opacity-0 ${inView ? 'animate-[fade-in-up_1s_ease-out_forwards]' : ''}`}
-              style={{ animationDelay: inView ? `${index * 0.15}s` : '0s' }} // Staggered delay
+        {/* --- MINIMALIST CATEGORY CIRCLES --- */}
+        <div className="flex flex-wrap gap-8 md:gap-14 mb-24 justify-start items-center">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat.name}
+              onClick={() => setActiveTab(cat.name)}
+              className="group flex flex-col items-center gap-4 outline-none"
             >
-              {/* Image Container with Reveal Mask */}
-              <div className="relative aspect-[4/5] mb-8 rounded-sm bg-slate-100 overflow-hidden">
-                {/* The Reveal Mask Effect */}
-                <div className="absolute inset-0 bg-white z-10 animate-[reveal-mask_1.5s_cubic-bezier(0.77,0,0.175,1)_forwards]" 
-                     style={{ animationDelay: `${index * 0.15 + 0.3}s` }}></div>
-                
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110"
+              <div className={`relative w-20 h-20 md:w-24 md:h-24 rounded-full transition-all duration-500 p-1 border ${
+                activeTab === cat.name ? 'border-black' : 'border-transparent group-hover:border-black/20'
+              }`}>
+                <div className="w-full h-full rounded-full overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700">
+                  <img src={cat.img} alt={cat.name} className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700" />
+                </div>
+              </div>
+              <span className={`text-[10px] font-black tracking-[0.2em] uppercase transition-colors ${
+                activeTab === cat.name ? 'text-black' : 'text-zinc-400 group-hover:text-black'
+              }`}>{cat.name}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* --- PRODUCT GRID --- */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-28">
+          {filtered.map((product, idx) => (
+            <div 
+              id={`product-${product.id}`}
+              key={product.id}
+              className={`group transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
+              style={{ transitionDelay: `${idx * 100}ms` }}
+            >
+              <div className="relative aspect-[4/5] overflow-hidden bg-zinc-100 mb-8">
+                <img 
+                  src={product.image} 
+                  alt={product.name} 
+                  className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110"
                 />
                 
-                {/* Glassmorphism Button Overlay */}
-                <div className="absolute inset-0 bg-slate-900/10 opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-center justify-center p-8 z-20">
-                  <button className="bg-white/90 backdrop-blur-md text-slate-900 w-full py-4 text-[10px] font-bold tracking-[0.3em] uppercase transform translate-y-12 group-hover:translate-y-0 transition-all duration-500 hover:bg-pink-600 hover:text-white">
-                    QUICK VIEW — {item.price}
-                  </button>
+                {/* WHATSAPP QUICK ACTION */}
+                <button 
+                  onClick={() => handleWhatsApp(product.name)}
+                  className="absolute top-6 right-6 z-30 p-4 bg-white/90 backdrop-blur-md text-black rounded-full shadow-xl hover:bg-black hover:text-white transition-all duration-300 transform translate-y-[-10px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
+                  title="Inquiry on WhatsApp"
+                >
+                  <FaWhatsapp size={20} />
+                </button>
+
+                {/* BOTTOM OVERLAY BUTTON */}
+                <div className="absolute inset-x-0 bottom-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-20">
+                    <button className="w-full py-4 bg-black text-white text-[10px] font-black tracking-[0.3em] uppercase hover:bg-zinc-800 transition-colors">
+                        Add to Order — {product.price}
+                    </button>
                 </div>
               </div>
 
-              {/* Product Info with Hover Underline */}
-              <div className="text-center">
-                <h3 className="text-2xl font-serif text-slate-900 mb-2 relative inline-block">
-                  {item.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-pink-300 transition-all duration-500 group-hover:w-full"></span>
-                </h3>
-                <div className="flex items-center justify-center gap-4 mt-3 opacity-60">
-                    <div className="h-px w-6 bg-slate-200"></div>
-                    <p className="text-[10px] font-bold text-slate-400 tracking-[0.4em] uppercase">{item.category}</p>
-                    <div className="h-px w-6 bg-slate-200"></div>
+              {/* TEXT CONTENT */}
+              <div className="space-y-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-[9px] font-bold text-zinc-400 tracking-widest uppercase mb-1">{product.category}</p>
+                    <h3 className="text-2xl font-serif text-black group-hover:italic transition-all duration-300">
+                        {product.name}
+                    </h3>
+                  </div>
+                  <div className="h-[1px] w-8 bg-black/10 mt-6" />
+                </div>
+                
+                <div 
+                  onClick={() => handleWhatsApp(product.name)}
+                  className="flex items-center gap-2 text-zinc-400 text-[10px] font-black tracking-widest uppercase cursor-pointer hover:text-green-600 transition-colors"
+                >
+                  <FaWhatsapp size={14} />
+                  <span>Inquire via WhatsApp</span>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Bottom CTA with Pulsing Animation */}
-        <div className={`mt-32 text-center ${inView ? 'animate-[fade-in-up_1s_ease-out_1s_both]' : ''}`}>
-            <button className="group relative px-20 py-6 border border-slate-200 text-slate-900 text-[10px] font-bold tracking-[0.4em] uppercase overflow-hidden transition-colors duration-500 hover:text-white">
-                <span className="relative z-10">View Full Lookbook</span>
-                <div className="absolute inset-0 bg-slate-900 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+        {/* --- STARK FOOTER --- */}
+        <div className="mt-40 text-center">
+            <button className="group relative px-20 py-6 bg-black text-white text-[11px] font-black tracking-[0.5em] uppercase overflow-hidden">
+                <span className="relative z-10">View All Objects</span>
+                <div className="absolute inset-0 bg-zinc-800 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
             </button>
         </div>
       </div>

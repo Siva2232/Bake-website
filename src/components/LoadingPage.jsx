@@ -1,92 +1,119 @@
 import React, { useState, useEffect } from 'react';
 
-/**
- * A full‑screen loading animation that simulates a progress bar and
- * a few decorative SVG elements.  The parent can optionally pass an
- * `onComplete` callback which will be invoked once the progress hits
- * 100%.  Typical usage is to render this at the start of the app and
- * hide it afterwards.
- */
 const LoadingPage = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
+  const [imageIndex, setImageIndex] = useState(0);
 
-  // Simulate a high-end smooth progress bar
+  const cakeImages = [
+    "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=600",
+    "https://images.unsplash.com/photo-1562777717-dc6984f65a63?auto=format&fit=crop&q=80&w=600",
+    "https://images.unsplash.com/photo-1621303837174-89787a7d4729?auto=format&fit=crop&q=80&w=600",
+    "https://images.unsplash.com/photo-1535141192574-5d4897c825a0?auto=format&fit=crop&q=80&w=600"
+  ];
+
   useEffect(() => {
     const timer = setInterval(() => {
       setProgress((oldProgress) => {
         if (oldProgress === 100) return 100;
-        const diff = Math.random() * 10;
+        const remaining = 100 - oldProgress;
+        const diff = Math.max(Math.random() * (remaining * 0.2), 1.5);
         return Math.min(oldProgress + diff, 100);
       });
-    }, 100);
+    }, 150);
     return () => clearInterval(timer);
   }, []);
 
-  // notify parent when we're finished
+  useEffect(() => {
+    const newIndex = Math.floor((progress / 100) * (cakeImages.length - 1));
+    if (newIndex !== imageIndex) setImageIndex(newIndex);
+  }, [progress, imageIndex]);
+
   useEffect(() => {
     if (progress === 100 && typeof onComplete === 'function') {
-      onComplete();
+      const timeout = setTimeout(onComplete, 800);
+      return () => clearTimeout(timeout);
     }
   }, [progress, onComplete]);
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#FDFCFB]">
-      {/* Background Brand Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
-        <h1 className="text-[30vw] font-serif italic">S</h1>
+    <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-white overflow-hidden">
+      
+      {/* Reduced Background P */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+        <h1 className={`text-[30vw] font-serif font-black text-black/[0.02] transition-transform duration-[4000ms] ${progress === 100 ? 'scale-125' : 'scale-100'}`}>
+          P
+        </h1>
       </div>
 
-      <div className="relative flex flex-col items-center">
-        {/* Animated Whisk/Mixer SVG */}
-        <div className="relative mb-12">
-          <svg 
-            width="80" 
-            height="80" 
-            viewBox="0 0 24 24" 
-            className="text-pink-600 animate-[spin_3s_linear_infinite]"
-          >
-            <path 
-              fill="currentColor" 
-              d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z" 
-              className="opacity-20"
-            />
-            <path 
-              fill="currentColor" 
-              d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22V20C7.58,20 4,16.42 4,12C4,7.58 7.58,4 12,4V2Z" 
+      <div className="relative z-10 flex flex-col items-center">
+        
+        {/* Scaled Down Image Circle */}
+        <div className="relative mb-8">
+          <svg className="absolute -inset-3 w-[calc(100%+24px)] h-[calc(100%+24px)] -rotate-90">
+            <circle cx="50%" cy="50%" r="48%" stroke="currentColor" strokeWidth="1" fill="transparent" className="text-zinc-100" />
+            <circle
+              cx="50%" cy="50%" r="48%" stroke="currentColor" strokeWidth="1.5" fill="transparent"
+              strokeDasharray="251" 
+              strokeDashoffset={251 - (251 * progress) / 100}
+              strokeLinecap="round"
+              className="text-black transition-all duration-700 ease-out"
             />
           </svg>
-          {/* Subtle heartbeat pulse in center */}
-          <div className="absolute inset-0 m-auto w-3 h-3 bg-pink-400 rounded-full animate-ping"></div>
-        </div>
 
-        {/* Text Reveal Logic */}
-        <div className="text-center space-y-4">
-          <h2 className="text-sm font-bold tracking-[0.5em] text-slate-900 uppercase overflow-hidden">
-            <span className="block animate-[translate-y_2s_ease-in-out_infinite]">
-              Perfecting the <span className="italic font-serif font-light lowercase tracking-normal">rise</span>
-            </span>
-          </h2>
-          
-          {/* Minimalist Progress Bar */}
-          <div className="w-48 h-[1px] bg-slate-100 relative overflow-hidden">
-            <div 
-              className="absolute left-0 top-0 h-full bg-pink-600 transition-all duration-500 ease-out"
-              style={{ width: `${progress}%` }}
-            ></div>
+          {/* Circle Image - Grayscale Removed */}
+          <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border border-black/5 shadow-2xl relative">
+            {cakeImages.map((img, idx) => (
+              <img
+                key={idx} 
+                src={img} 
+                alt=""
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                  imageIndex === idx ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+                }`}
+              />
+            ))}
           </div>
+        </div>
 
-          <p className="text-[10px] font-bold text-slate-300 tracking-[0.2em] uppercase">
-            {Math.round(progress)}%
-          </p>
+        {/* Counter */}
+        <div className="mb-2 text-center">
+          <h2 className="text-5xl md:text-6xl font-serif font-light tracking-tighter text-black tabular-nums">
+            {Math.round(progress)}<span className="text-sm align-top mt-4 ml-0.5 opacity-30">%</span>
+          </h2>
+        </div>
+
+        {/* Labels */}
+        <div className="w-48 md:w-56 space-y-3">
+          <div className="flex justify-between items-end">
+            <div className="flex flex-col">
+              <span className="text-[7px] font-black text-black tracking-[0.3em] uppercase">Status</span>
+              <span className="text-[9px] font-serif italic text-zinc-400">
+                {progress < 40 ? 'Sourcing...' : progress < 80 ? 'Perfecting...' : 'Curating...'}
+              </span>
+            </div>
+            <span className="text-[8px] font-black text-black tracking-widest uppercase opacity-40 italic">© 2026</span>
+          </div>
+          
+          <div className="h-[1px] w-full bg-zinc-100 relative overflow-hidden">
+             <div 
+               className="absolute left-0 top-0 h-full bg-black transition-all duration-700 ease-out"
+               style={{ width: `${progress}%` }}
+             />
+          </div>
         </div>
       </div>
 
-      {/* Footer Note */}
-      <div className="absolute bottom-12 flex items-center gap-3">
-        <div className="h-px w-8 bg-slate-200"></div>
-        <p className="text-[10px] tracking-widest text-slate-400 uppercase font-medium">SweetCrumbs Atelier</p>
-        <div className="h-px w-8 bg-slate-200"></div>
+      {/* Bottom Branding */}
+      <div className="absolute bottom-10 flex flex-col items-center transition-all duration-1000" style={{ opacity: progress > 95 ? 0 : 1 }}>
+        <h3 className="text-[8px] font-black tracking-[0.5em] text-black uppercase">
+          PURRFECTLY <span className="italic font-light text-zinc-400">Yours</span>
+        </h3>
       </div>
+
+      {/* The Reveal Overlay */}
+      <div className={`fixed inset-0 bg-black transition-transform duration-[1200ms] ease-[cubic-bezier(0.87,0,0.13,1)] z-[210] ${
+          progress === 100 ? 'translate-y-0' : 'translate-y-full'
+      }`} />
     </div>
   );
 };

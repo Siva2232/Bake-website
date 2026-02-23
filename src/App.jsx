@@ -5,7 +5,7 @@ import { Contact } from "./components/Contact";
 import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
-import { Chatbot } from "./components/Chatbot";
+// import { Chatbot } from "./components/Chatbot";
 import LoadingPage from "./components/LoadingPage";
 import { useState } from "react";
 
@@ -26,13 +26,13 @@ function App() {
       <Navbar />
       <main className="pt-20">
         <Hero />
-        <About />
+        {/* <About /> */}
         <Products />
         <Testimonials />
-        <Contact />
+        {/* <Contact /> */}
       </main>
       <Footer />
-      <Chatbot />
+      {/* <Chatbot /> */}
     </div>
   );
 }

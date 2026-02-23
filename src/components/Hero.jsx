@@ -1,89 +1,128 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ChevronRight, ChevronLeft, ArrowRight } from 'lucide-react';
+
+const SLIDES = [
+  {
+    id: 1,
+    title: "The Golden Croissant",
+    tag: "SIGNATURE",
+    img: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=95&w=1920", // Increased quality param
+  },
+  {
+    id: 2,
+    title: "Midnight Macarons",
+    tag: "LIMITED",
+    img: "https://images.unsplash.com/photo-1559181567-c3190ca9959b?auto=format&fit=crop&q=95&w=1920",
+  },
+  {
+    id: 3,
+    title: "Ancient Hearth",
+    tag: "TRADITIONAL",
+    img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=95&w=1920",
+  }
+];
 
 export const Hero = () => {
-  return (
-    <section id="home" className="relative min-h-screen bg-[#FDFCFB] overflow-hidden flex items-center">
-      
-      {/* 1. Large Background Typography - Subtle Fade & Scale In */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none animate-[fade-in-scale_2s_ease-out]">
-        <h1 className="text-[20vw] font-serif italic text-pink-50/40 leading-none">
-          Artisan
-        </h1>
-      </div>
+  const [current, setCurrent] = useState(0);
+  const [progress, setProgress] = useState(0);
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+  const nextSlide = useCallback(() => {
+    setCurrent((prev) => (prev === SLIDES.length - 1 ? 0 : prev + 1));
+    setProgress(0);
+  }, []);
+
+  const prevSlide = () => {
+    setCurrent((prev) => (prev === 0 ? SLIDES.length - 1 : prev - 1));
+    setProgress(0);
+  };
+
+  useEffect(() => {
+    const interval = 5000;
+    const timer = setInterval(nextSlide, interval);
+    const step = 100 / (interval / 100);
+
+    const progressTimer = setInterval(() => {
+      setProgress((p) => Math.min(p + step, 100));
+    }, 100);
+
+    return () => {
+      clearInterval(timer);
+      clearInterval(progressTimer);
+    };
+  }, [nextSlide, current]);
+
+  return (
+    <div className="w-full">
+      <section className="relative h-[55vh] min-h-[400px] max-h-[550px] w-full overflow-hidden group rounded-2xl mt-10">
         
-        {/* Left Column: Text Content */}
-        <div className="lg:col-span-7">
-          {/* Tagline Reveal */}
-          <div className="flex items-center gap-3 mb-6 animate-[slide-right_1s_ease-out_forwards]">
-            <div className="h-[1px] w-12 bg-pink-300"></div>
-            <span className="text-xs font-bold tracking-[0.4em] uppercase text-pink-500">
-              Est. 2024 • Paris & London
+        {/* BACKGROUND IMAGES - FIXED CLARITY */}
+        {SLIDES.map((slide, index) => (
+          <div
+            key={slide.id}
+            className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+              index === current ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+            }`}
+          >
+            <img 
+              src={slide.img} 
+              alt={slide.title} 
+              className="w-full h-full object-cover" 
+              loading="eager"
+            />
+            
+            {/* VIGNETTE ONLY - NO CENTER OVERLAY */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+          </div>
+        ))}
+
+        {/* CONTENT - HIGH READABILITY WITHOUT BLUR */}
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-6">
+          <div className="overflow-hidden mb-4">
+            <span className="block text-[#C5A358] text-[11px] font-black tracking-[0.6em] uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+              {SLIDES[current].tag}
             </span>
           </div>
-
-          {/* Main Heading with Masked Reveal (The "Text-Up" Effect) */}
-          <h2 className="text-7xl md:text-9xl font-serif text-slate-900 leading-[0.9] mb-8 tracking-tight overflow-hidden">
-            <span className="block animate-[slide-up_1.2s_ease-out_0.2s_both]">The Art of</span>
-            <span className="block italic text-pink-600 font-light animate-[slide-up_1.2s_ease-out_0.4s_both]">Fine Crumb</span>
+          
+          <h2 className="text-5xl md:text-8xl font-serif italic text-white mb-10 transition-all duration-500 drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+            {SLIDES[current].title}
           </h2>
 
-          {/* Description Fade Up */}
-          <p className="text-lg md:text-xl text-slate-500 max-w-lg mb-12 font-light leading-relaxed border-l-2 border-pink-100 pl-6 animate-[fade-in-up_1s_ease-out_0.8s_both]">
-            We don't just bake; we curate moments. Discover our seasonal collection of 
-            hand-painted macarons and 72-hour fermented sourdough.
-          </p>
-
-          {/* Buttons Fade Up */}
-          <div className="flex flex-wrap items-center gap-8 animate-[fade-in-up_1s_ease-out_1s_both]">
-            <button className="relative group px-12 py-5 bg-slate-900 rounded-sm overflow-hidden transition-all duration-500 hover:scale-105 active:scale-95">
-              <span className="relative z-10 text-white font-bold tracking-widest text-xs">
-                SHOP THE COLLECTION
-              </span>
-              <div className="absolute inset-0 bg-pink-600 -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-            </button>
-
-            <a href="#about" className="group flex flex-col pt-2">
-              <span className="text-xs font-bold tracking-widest text-slate-900">OUR STORY</span>
-              <div className="h-[2px] w-full bg-slate-200 mt-1 overflow-hidden">
-                <div className="h-full w-full bg-pink-500 -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
-              </div>
-            </a>
-          </div>
+          <button className="group relative flex items-center gap-4 px-12 py-4 bg-white text-black text-[10px] font-bold tracking-[0.3em] overflow-hidden transition-all duration-300 hover:bg-[#C5A358] hover:text-white">
+            <span className="relative z-10">DISCOVER THE CRAFT</span>
+            <ArrowRight size={14} className="relative z-10 transition-transform group-hover:translate-x-1" />
+          </button>
         </div>
 
-        {/* Right Column: Visual Showcase - Reveal with Clip-Path or Scale */}
-        <div className="lg:col-span-5 relative flex justify-end animate-[fade-in-scale_1.5s_ease-out_0.5s_both]">
-          <div className="relative w-full aspect-[4/5] bg-pink-50 rounded-t-[200px] border-[12px] border-white shadow-2xl overflow-hidden group">
-            <img 
-              src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=1000" 
-              alt="Artisan Chocolate Cake"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-pink-900/20 to-transparent opacity-60"></div>
-
-            {/* Badge with floating animation */}
-            <div className="absolute bottom-8 -left-8 bg-white p-6 shadow-xl rounded-full animate-[bounce_4s_infinite_ease-in-out] z-20">
-              <div className="w-16 h-16 border-2 border-dashed border-pink-200 rounded-full flex items-center justify-center text-center leading-none">
-                <span className="text-[10px] font-bold text-pink-500 uppercase tracking-tighter">
-                  100%<br/>Organic
-                </span>
-              </div>
-            </div>
-          </div>
+        {/* CONTROLS - REFINED DARK MODE */}
+        <div className="absolute inset-x-8 top-1/2 -translate-y-1/2 flex justify-between z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <button 
+            onClick={prevSlide} 
+            className="p-4 border border-white/20 bg-black/40 text-white backdrop-blur-sm transition-all hover:bg-white hover:text-black"
+          >
+            <ChevronLeft size={24} strokeWidth={1.5} />
+          </button>
+          <button 
+            onClick={nextSlide} 
+            className="p-4 border border-white/20 bg-black/40 text-white backdrop-blur-sm transition-all hover:bg-white hover:text-black"
+          >
+            <ChevronRight size={24} strokeWidth={1.5} />
+          </button>
         </div>
-      </div>
 
-      {/* Sidebar Staggered Reveal */}
-      <div className="hidden xl:flex absolute left-8 bottom-12 flex-col gap-6 items-center animate-[fade-in_1s_ease-out_1.5s_both]">
-        <div className="h-24 w-[1px] bg-slate-200 origin-bottom animate-[scale-y_1s_ease-out_1.5s_both]"></div>
-        {['IG', 'TW', 'FB'].map((social, i) => (
-          <span key={social} className="text-[10px] font-bold text-slate-400 hover:text-pink-600 cursor-pointer transition-colors vertical-text uppercase tracking-widest">
-            {social}
-          </span>
-        ))}
-      </div>
-    </section>
+        {/* GOLD PROGRESS - BOTTOM FIXED */}
+        <div className="absolute bottom-0 left-0 w-full h-[4px] bg-white/10 z-40">
+          <div 
+            className="h-full bg-[#C5A358] shadow-[0_0_10px_#C5A358] transition-all duration-100 linear"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+
+        {/* COUNTER */}
+        <div className="absolute top-10 right-10 text-white font-serif italic text-2xl z-20 drop-shadow-lg">
+          0{current + 1}
+        </div>
+
+      </section>
+    </div>
   );
 };
