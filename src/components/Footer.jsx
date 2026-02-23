@@ -67,7 +67,6 @@ export const Footer = () => {
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Accessibility</a>
           </div>
-          <p>Handcrafted by <span className="text-slate-300">Premium Designs</span></p>
         </div>
 
       </div>
