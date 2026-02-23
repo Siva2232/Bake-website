@@ -48,6 +48,7 @@ export const Products = () => {
     window.addEventListener('selectCategory', handler);
     return () => window.removeEventListener('selectCategory', handler);
   }, []);
+  
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef(null);
 
@@ -82,13 +83,13 @@ export const Products = () => {
           </h2>
         </div>
 
-        {/* --- MINIMALIST CATEGORY CIRCLES --- */}
-        <div className="flex flex-wrap gap-8 md:gap-14 mb-24 justify-start items-center">
+        {/* --- MINIMALIST CATEGORY CIRCLES - SWIPEABLE ON MOBILE --- */}
+        <div className="flex flex-nowrap gap-8 md:gap-14 mb-24 overflow-x-auto pb-8 md:pb-0 scrollbar-hide snap-x snap-mandatory md:flex-wrap md:overflow-visible">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.name}
               onClick={() => setActiveTab(cat.name)}
-              className="group flex flex-col items-center gap-4 outline-none"
+              className="group flex flex-col items-center gap-4 flex-shrink-0 snap-center outline-none"
             >
               <div className={`relative w-20 h-20 md:w-24 md:h-24 rounded-full transition-all duration-500 p-1 border ${
                 activeTab === cat.name ? 'border-black' : 'border-transparent group-hover:border-black/20'
@@ -97,31 +98,32 @@ export const Products = () => {
                   <img src={cat.img} alt={cat.name} className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700" />
                 </div>
               </div>
-              <span className={`text-[10px] font-black tracking-[0.2em] uppercase transition-colors ${
+              <span className={`text-[10px] font-black tracking-[0.2em] uppercase transition-colors whitespace-nowrap ${
                 activeTab === cat.name ? 'text-black' : 'text-zinc-400 group-hover:text-black'
               }`}>{cat.name}</span>
             </button>
           ))}
         </div>
 
-        {/* --- PRODUCT GRID --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-28">
+        {/* --- PRODUCT GRID - 2 CARDS PER ROW ON MOBILE (PERFECT ALIGNMENT) --- */}
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16 md:gap-x-12 md:gap-y-28">
           {filtered.map((product, idx) => (
-            <div 
+            <div
               id={`product-${product.id}`}
               key={product.id}
-              className={`group transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
+              className={`group flex flex-col h-full transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
               style={{ transitionDelay: `${idx * 100}ms` }}
             >
-              <div className="relative aspect-[4/5] overflow-hidden bg-zinc-100 mb-8">
-                <img 
-                  src={product.image} 
-                  alt={product.name} 
+              {/* IMAGE AREA - FIXED ASPECT */}
+              <div className="relative aspect-[4/5] overflow-hidden bg-zinc-100 mb-8 flex-shrink-0">
+                <img
+                  src={product.image}
+                  alt={product.name}
                   className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110"
                 />
-                
-                {/* WHATSAPP QUICK ACTION */}
-                <button 
+               
+                {/* WHATSAPP FLOATING BUTTON */}
+                <button
                   onClick={() => handleWhatsApp(product.name)}
                   className="absolute top-6 right-6 z-30 p-4 bg-white/90 backdrop-blur-md text-black rounded-full shadow-xl hover:bg-black hover:text-white transition-all duration-300 transform translate-y-[-10px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
                   title="Inquiry on WhatsApp"
@@ -137,24 +139,27 @@ export const Products = () => {
                 </div>
               </div>
 
-              {/* TEXT CONTENT */}
-              <div className="space-y-4">
+              {/* TEXT CONTENT - NOW PUSHES BUTTON TO BOTTOM */}
+              <div className="flex-1 flex flex-col">
                 <div className="flex justify-between items-start">
-                  <div>
+                  <div className="flex-1">
                     <p className="text-[9px] font-bold text-zinc-400 tracking-widest uppercase mb-1">{product.category}</p>
-                    <h3 className="text-2xl font-serif text-black group-hover:italic transition-all duration-300">
+                    <h3 className="text-2xl font-serif text-black group-hover:italic transition-all duration-300 leading-tight">
                         {product.name}
                     </h3>
                   </div>
-                  <div className="h-[1px] w-8 bg-black/10 mt-6" />
+                  <div className="h-[1px] w-8 bg-black/10 mt-6 flex-shrink-0" />
                 </div>
-                
-                <div 
-                  onClick={() => handleWhatsApp(product.name)}
-                  className="flex items-center gap-2 text-zinc-400 text-[10px] font-black tracking-widest uppercase cursor-pointer hover:text-green-600 transition-colors"
-                >
-                  <FaWhatsapp size={14} />
-                  <span>Inquire via WhatsApp</span>
+
+                {/* WhatsApp Button pushed to bottom */}
+                <div className="mt-auto pt-8">
+                  <button
+                    onClick={() => handleWhatsApp(product.name)}
+                    className="w-full flex items-center justify-center gap-3 py-3.5 border-2 border-green-600 hover:bg-green-50 hover:border-green-700 text-green-700 font-medium text-sm rounded-2xl transition-all active:scale-[0.985]"
+                  >
+                    <FaWhatsapp size={20} />
+                    <span>Inquire via WhatsApp</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -163,8 +168,8 @@ export const Products = () => {
 
         {/* --- STARK FOOTER --- */}
         <div className="mt-40 text-center">
-            <button className="group relative px-20 py-6 bg-black text-white text-[11px] font-black tracking-[0.5em] uppercase overflow-hidden">
-                <span className="relative z-10">View All Objects</span>
+            <button className="group relative px-15 py-6 bg-black text-white text-[11px] font-black tracking-[0.5em] uppercase overflow-hidden">
+                <span className="relative z-10">View All Products</span>
                 <div className="absolute inset-0 bg-zinc-800 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
             </button>
         </div>

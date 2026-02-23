@@ -59,7 +59,6 @@ export const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // FIXED & RELIABLE outside click + auto-focus
   useEffect(() => {
     const handleOutsideClick = (e) => {
       if (searchRef.current && !searchRef.current.contains(e.target)) {
@@ -86,19 +85,19 @@ export const Navbar = () => {
             : 'py-3'
         }`}
       >
-        {/* UPPER TIER */}
-        <div className="max-w-[1440px] mx-auto px-6 md:px-10 flex items-center h-16 md:h-20">
+        {/* UPPER TIER - Fully Responsive */}
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 flex items-center h-14 md:h-16 lg:h-20">
           {/* LEFT: Logo + Mobile Menu */}
-          <div className="flex items-center flex-1 gap-4">
+          <div className="flex items-center flex-1 gap-3 sm:gap-4">
             <button 
               onClick={() => setIsOpen(true)} 
-              className="md:hidden p-2 -ml-2 text-black hover:bg-black/5 rounded-full transition-colors"
+              className="md:hidden p-2 -ml-1 sm:-ml-2 text-black hover:bg-black/5 rounded-full transition-colors"
             >
-              <Menu size={24} strokeWidth={1.8} />
+              <Menu size={22} strokeWidth={1.8} />
             </button>
 
             <div className="flex-shrink-0 flex flex-col items-start cursor-pointer group">
-              <h1 className="text-3xl md:text-[34px] font-serif tracking-[-1.5px] text-black leading-none flex items-baseline gap-1">
+              <h1 className="text-2xl sm:text-3xl md:text-[34px] font-serif tracking-[-1.5px] text-black leading-none flex items-baseline gap-1">
                 <span className="font-black">My Bake</span>
                 <span className="font-light text-zinc-400 group-hover:text-rose-400 transition-colors duration-500">Company</span>
               </h1>
@@ -106,7 +105,7 @@ export const Navbar = () => {
             </div>
           </div>
 
-          {/* CENTER: Search Bar (NOW 100% WORKING) */}
+          {/* CENTER: Search Bar - Mobile Friendly */}
           <div className="flex justify-center flex-1">
             <div className="relative" ref={searchRef}>
               <button
@@ -115,14 +114,14 @@ export const Navbar = () => {
                   setSearchQuery('');
                   setSuggestions([]);
                 }}
-                className="group flex items-center gap-3 px-6 py-3 rounded-full border border-zinc-200 hover:border-zinc-400 hover:shadow-sm bg-white transition-all active:scale-[0.985]"
+                className="group flex items-center gap-2 sm:gap-3 px-4 py-2.5 md:px-6 md:py-3 rounded-full border border-zinc-200 hover:border-zinc-400 hover:shadow-sm bg-white transition-all active:scale-[0.985]"
               >
                 <Search size={19} strokeWidth={2} className="text-zinc-500 group-hover:text-black transition-colors" />
-                <span className="text-sm font-medium text-zinc-500 group-hover:text-black hidden lg:block">Search the collection</span>
+                <span className="text-sm font-medium text-zinc-500 group-hover:text-black hidden md:block">Search the collection</span>
               </button>
 
               {showSearch && (
-                <div className="absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 w-[420px] bg-white border border-zinc-100 shadow-2xl shadow-black/10 rounded-3xl overflow-hidden z-[999]">
+                <div className="absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 w-[92vw] max-w-[420px] bg-white border border-zinc-100 shadow-2xl shadow-black/10 rounded-3xl overflow-hidden z-[999]">
                   {/* Input Area */}
                   <div className="relative border-b border-zinc-100">
                     <Search size={16} className="absolute left-6 top-1/2 -translate-y-1/2 text-zinc-400" />
@@ -209,29 +208,18 @@ export const Navbar = () => {
             </div>
           </div>
 
-          {/* RIGHT: Icons + Explore */}
-          <div className="flex items-center justify-end flex-1 gap-2">
-            {/* <button className="p-3 text-zinc-500 hover:text-black hover:bg-zinc-100 rounded-full transition-all active:scale-95">
-              <User size={20} strokeWidth={1.8} />
-            </button>
-            <button className="p-3 text-zinc-500 hover:text-black hover:bg-zinc-100 rounded-full transition-all active:scale-95">
-              <Heart size={20} strokeWidth={1.8} />
-            </button>
-            <button className="p-3 text-zinc-500 hover:text-black hover:bg-zinc-100 rounded-full transition-all active:scale-95 relative">
-              <ShoppingCart size={20} strokeWidth={1.8} />
-              <div className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full"></div>
-            </button> */}
-
+          {/* RIGHT: Explore Button - Mobile Optimized */}
+          <div className="flex items-center justify-end flex-1">
             <button
               onClick={() => handleNav('SHOP ALL')}
-              className="ml-4 px-8 py-3 bg-black hover:bg-zinc-900 text-white text-xs font-black tracking-[0.125em] rounded-2xl transition-all active:scale-[0.985]"
+              className="px-5 py-2.5 md:px-8 md:py-3 bg-black hover:bg-zinc-900 text-white text-[10px] md:text-xs font-black tracking-[0.125em] rounded-2xl transition-all active:scale-[0.985]"
             >
-              EXPLORE COLLECTION
+              EXPLORE
             </button>
           </div>
         </div>
 
-        {/* LOWER TIER - Desktop Nav */}
+        {/* LOWER TIER - Desktop Only (unchanged) */}
         <div className="hidden md:block border-t border-black/5 bg-white/80 backdrop-blur-md">
           <div className="max-w-[1440px] mx-auto">
             <ul className="flex items-center justify-center gap-x-12 h-14">
@@ -251,7 +239,6 @@ export const Navbar = () => {
             </ul>
           </div>
 
-          {/* HOVER DROPDOWN */}
           {dropdownItems.length > 0 && (
             <div
               onMouseEnter={() => setHoverCategory(hoverCategory)}
@@ -286,7 +273,7 @@ export const Navbar = () => {
         </div>
       </nav>
 
-      {/* MOBILE DRAWER */}
+      {/* MOBILE DRAWER - Unchanged (already perfect) */}
       <div 
         className={`fixed inset-0 z-[110] bg-black/60 backdrop-blur-xl transition-opacity duration-500 ${
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -300,8 +287,8 @@ export const Navbar = () => {
         <div className="p-8 flex flex-col h-full">
           <div className="flex justify-between items-center mb-12">
             <div className="flex flex-col">
-              <h1 className="text-3xl font-serif tracking-tight">PURRFECTLY</h1>
-              <span className="text-xs text-zinc-400 -mt-1">Yours</span>
+              <h1 className="text-3xl font-serif tracking-tight">My Bake</h1>
+              <span className="text-xs text-zinc-400 -mt-1">Company</span>
             </div>
             <button 
               onClick={() => setIsOpen(false)} 
