@@ -1,101 +1,93 @@
 import React from 'react';
-import { ArrowUpRight, Instagram, Twitter, Mail } from 'lucide-react';
+import { ArrowUpRight, Instagram, Twitter, Mail, ArrowUp } from 'lucide-react';
 
 export const Footer = () => {
   return (
-    <footer className="bg-white text-black pt-32 pb-12 px-6 lg:px-12 border-t border-black">
+    <footer className="bg-[#FAF9F6] text-[#1a1a1a] pt-40 pb-12 px-6 lg:px-12 border-t border-zinc-200">
       <div className="max-w-[1440px] mx-auto">
         
         {/* --- TOP: BRAND & NEWSLETTER --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-32">
-          <div className="lg:col-span-6 space-y-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 mb-40">
+          <div className="lg:col-span-7 space-y-12">
             <div className="flex items-center gap-4">
-               <div className="h-[2px] w-12 bg-black" />
-               <span className="text-[11px] font-black tracking-[0.5em] uppercase">Join The Inner Circle</span>
+               <div className="h-[1px] w-12 bg-[#C5A358]" />
+               <span className="text-[11px] font-bold tracking-[0.5em] uppercase text-[#C5A358]">The Inner Circle</span>
             </div>
-            <h3 className="text-5xl md:text-7xl font-serif leading-[0.9] tracking-tighter">
+            <h3 className="text-6xl md:text-8xl font-serif leading-[0.85] tracking-tight">
               Bespoke updates <br />
-              <span className="italic font-light text-zinc-400">delivered to your inbox.</span>
+              <span className="italic font-light text-zinc-300">to your inbox.</span>
             </h3>
             
-            <form className="relative max-w-md group overflow-hidden">
+            <form className="relative max-w-xl group">
               <input 
                 type="email" 
-                placeholder="EMAIL@ADDRESS.COM" 
-                className="w-full bg-transparent border-b-2 border-black py-6 outline-none text-sm font-bold tracking-widest placeholder:text-zinc-300"
+                placeholder="YOUR EMAIL ADDRESS" 
+                className="w-full bg-transparent border-b border-zinc-300 py-8 outline-none text-sm font-bold tracking-[0.2em] placeholder:text-zinc-300 focus:border-[#C5A358] transition-colors"
               />
-              <button className="absolute right-0 bottom-6 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform">
-                <ArrowUpRight size={28} strokeWidth={1.5} />
+              <button className="absolute right-0 bottom-8 flex items-center gap-3 group-hover:text-[#C5A358] transition-all">
+                <span className="text-[10px] font-bold tracking-widest uppercase hidden md:block">Subscribe</span>
+                <ArrowUpRight size={24} strokeWidth={1} />
               </button>
             </form>
           </div>
 
           {/* --- LINKS NAVIGATION --- */}
-          <div className="lg:col-span-6 grid grid-cols-2 md:grid-cols-3 gap-12 lg:pl-20">
-            <div className="space-y-8">
-              <h4 className="text-[10px] font-black tracking-[0.4em] uppercase text-zinc-400">Sitemap</h4>
-              <ul className="space-y-4 text-sm font-bold tracking-tight">
-                <li className="hover:italic transition-all"><a href="#">Shop All</a></li>
-                <li className="hover:italic transition-all"><a href="#">Apparel</a></li>
-                <li className="hover:italic transition-all"><a href="#">The Vault</a></li>
-                <li className="hover:italic transition-all"><a href="#">Heritage</a></li>
+          <div className="lg:col-span-5 grid grid-cols-2 gap-16 lg:pl-20 pt-10">
+            <div className="space-y-10">
+              <h4 className="text-[10px] font-bold tracking-[0.4em] uppercase text-[#C5A358]">The Company</h4>
+              <ul className="space-y-5 text-[13px] font-medium tracking-wide">
+                <li><a href="#" className="hover:text-[#C5A358] transition-colors">Boutique Shop</a></li>
+                <li><a href="#" className="hover:text-[#C5A358] transition-colors">Our Heritage</a></li>
+                <li><a href="#" className="hover:text-[#C5A358] transition-colors">The Bakehouse</a></li>
+                <li><a href="#" className="hover:text-[#C5A358] transition-colors">Artisans</a></li>
               </ul>
             </div>
             
-            <div className="space-y-8">
-              <h4 className="text-[10px] font-black tracking-[0.4em] uppercase text-zinc-400">Service</h4>
-              <ul className="space-y-4 text-sm font-bold tracking-tight">
-                <li className="hover:italic transition-all"><a href="#">Wholesale</a></li>
-                <li className="hover:italic transition-all"><a href="#">Shipping</a></li>
-                <li className="hover:italic transition-all"><a href="#">Returns</a></li>
-                <li className="hover:italic transition-all"><a href="#">Care Guide</a></li>
-              </ul>
-            </div>
-
-            <div className="col-span-2 md:col-span-1 space-y-8">
-              <h4 className="text-[10px] font-black tracking-[0.4em] uppercase text-zinc-400">Social</h4>
-              <div className="flex flex-col gap-4 text-sm font-bold">
-                <a href="#" className="flex items-center gap-2 hover:text-zinc-400 transition-colors">
-                  <Instagram size={14} /> INSTAGRAM
+            <div className="space-y-10">
+              <h4 className="text-[10px] font-bold tracking-[0.4em] uppercase text-[#C5A358]">Socials</h4>
+              <div className="flex flex-col gap-5 text-[13px] font-medium">
+                <a href="#" className="flex items-center gap-3 hover:text-[#C5A358] transition-colors">
+                  <Instagram size={16} strokeWidth={1.5} /> INSTAGRAM
                 </a>
-                <a href="#" className="flex items-center gap-2 hover:text-zinc-400 transition-colors">
-                  <Twitter size={14} /> TWITTER
+                <a href="#" className="flex items-center gap-3 hover:text-[#C5A358] transition-colors">
+                  <Twitter size={16} strokeWidth={1.5} /> TWITTER
                 </a>
-                <a href="#" className="flex items-center gap-2 hover:text-zinc-400 transition-colors">
-                  <Mail size={14} /> EMAIL US
+                <a href="#" className="flex items-center gap-3 hover:text-[#C5A358] transition-colors">
+                  <Mail size={16} strokeWidth={1.5} /> EMAIL US
                 </a>
               </div>
             </div>
           </div>
         </div>
 
-        {/* --- STATEMENT LOGO (THE MONUMENT) --- */}
-        <div className="py-20 border-t border-black/10 overflow-hidden">
-          <h1 className="text-[18vw] font-serif font-black text-black leading-none select-none tracking-tighter text-center">
+        {/* --- BIG LOGO DISPLAY --- */}
+        <div className="relative py-24 border-t border-zinc-200">
+          <h1 className="text-[14vw] font-serif italic font-light text-[#1a1a1a] leading-none select-none tracking-tighter text-center opacity-90">
             My Bake Company
           </h1>
+          {/* Subtle gold line floating over logo */}
+          <div className="absolute top-1/2 left-0 w-full h-[1px] bg-[#C5A358]/10 -translate-y-1/2 pointer-events-none" />
         </div>
 
-        {/* --- BOTTOM: LEGAL STARKNESS --- */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8 pt-12 border-t border-black">
-          <div className="text-[10px] font-black tracking-[0.3em] uppercase">
-            © {new Date().getFullYear()} My Bake Company.
+        {/* --- BOTTOM: LEGAL & SCROLL --- */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-10 pt-16 border-t border-zinc-200">
+          <div className="text-[10px] font-bold tracking-[0.3em] uppercase text-zinc-400">
+            © {new Date().getFullYear()} MBC. Site by <span className="text-[#1a1a1a]">Elite Design</span>
           </div>
           
-          <div className="flex gap-12 text-[10px] font-black tracking-[0.3em] uppercase">
-            <a href="#" className="hover:line-through transition-all">Privacy</a>
-            <a href="#" className="hover:line-through transition-all">Terms</a>
-            <a href="#" className="hover:line-through transition-all">Accessibility</a>
+          <div className="flex gap-10 text-[10px] font-bold tracking-[0.3em] uppercase">
+            <a href="#" className="hover:text-[#C5A358] transition-all">Privacy Policy</a>
+            <a href="#" className="hover:text-[#C5A358] transition-all">Terms of Service</a>
           </div>
 
           <button 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="flex items-center gap-3 text-[10px] font-black tracking-[0.3em] uppercase group"
+            className="group flex flex-col items-center gap-3"
           >
-            Back to Top
-            <div className="p-2 border border-black group-hover:bg-black group-hover:text-white transition-all">
-              <ArrowUpRight size={14} className="-rotate-45" />
+            <div className="w-12 h-12 rounded-full border border-zinc-200 flex items-center justify-center group-hover:border-[#1a1a1a] group-hover:bg-[#1a1a1a] group-hover:text-white transition-all duration-500">
+              <ArrowUp size={18} strokeWidth={1} />
             </div>
+            <span className="text-[9px] font-bold tracking-[0.4em] uppercase">Top</span>
           </button>
         </div>
 

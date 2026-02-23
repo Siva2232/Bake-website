@@ -1,32 +1,15 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { ShoppingCart, ArrowRight, } from 'lucide-react';
+import { ShoppingCart, ArrowRight, Plus } from 'lucide-react';
 import { FaWhatsapp } from "react-icons/fa";
 
+// Constants already provided in your snippet
 export const CATEGORIES = [
-  { 
-    name: "All", 
-    img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=400" 
-  },
-  { 
-    name: "Cakes", 
-    img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=400" 
-  },
-  { 
-    name: "Specialties", 
-    img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=400" 
-  },
-  { 
-    name: "Cupcakes", 
-    img: "https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&q=80&w=400" 
-  },
-  { 
-    name: "Pastries", 
-    img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=400" 
-  },
-  { 
-    name: "Boulangerie", 
-    img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=400" 
-  }
+  { name: "All", img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=400" },
+  { name: "Cakes", img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=400" },
+  { name: "Specialties", img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=400" },
+  { name: "Cupcakes", img: "https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&q=80&w=400" },
+  { name: "Pastries", img: "https://images.unsplash.com/photo-1559181567-c3190ca9959b?auto=format&fit=crop&q=80&w=400" },
+  { name: "Boulangerie", img: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=400" }
 ];
 
 export const PRODUCTS = [
@@ -40,15 +23,6 @@ export const PRODUCTS = [
 
 export const Products = () => {
   const [activeTab, setActiveTab] = useState("All");
-
-  useEffect(() => {
-    const handler = (e) => {
-      setActiveTab(e.detail);
-    };
-    window.addEventListener('selectCategory', handler);
-    return () => window.removeEventListener('selectCategory', handler);
-  }, []);
-  
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef(null);
 
@@ -61,116 +35,115 @@ export const Products = () => {
   }, []);
 
   const handleWhatsApp = (productName) => {
-    const message = encodeURIComponent(`Hi, I'm interested in ordering the ${productName}. Could you provide more details?`);
+    const message = encodeURIComponent(`Bonjour! I would like to inquire about the ${productName}.`);
     window.open(`https://wa.me/91XXXXXXXXXX?text=${message}`, '_blank');
   };
 
   const filtered = activeTab === "All" ? PRODUCTS : PRODUCTS.filter(p => p.category === activeTab);
 
   return (
-    <section id="products" ref={sectionRef} className="bg-white py-32 px-6 lg:px-12 text-black overflow-hidden">
-      <div className="max-w-7xl mx-auto">
+    <section id="products" ref={sectionRef} className="bg-[#FAF9F6] py-32 px-6 lg:px-12">
+      <div className="max-w-[1400px] mx-auto">
         
-        {/* --- STARK B&W HEADER --- */}
-        <div className={`mb-24 transition-all duration-1000 transform ${visible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          <div className="flex items-center gap-4 mb-6">
-            <div className="h-[2px] w-12 bg-black" />
-            <span className="text-[11px] font-black tracking-[0.5em] text-black uppercase">Established Excellence</span>
+        {/* --- LUXURY HEADER --- */}
+        <div className={`mb-32 flex flex-col md:flex-row md:items-end justify-between gap-8 transition-all duration-1000 ${visible ? 'opacity-100' : 'opacity-0 translate-y-10'}`}>
+          <div className="max-w-2xl">
+            <span className="text-[#C5A358] text-[11px] font-bold tracking-[0.5em] uppercase mb-6 block">Our Craft</span>
+            <h2 className="text-6xl md:text-8xl font-serif text-[#1a1a1a] leading-[0.85]">
+              The <span className="italic font-light">Fine</span> <br /> 
+              <span className="ml-0 md:ml-20">Patisserie</span>
+            </h2>
           </div>
-          <h2 className="text-6xl md:text-8xl font-serif text-black leading-none mb-4">
-            The <span className="italic font-light">Curated</span> <br />
-            <span className="font-bold">Collection</span>
-          </h2>
+          <div className="md:text-right">
+            <p className="text-zinc-500 font-light max-w-xs md:ml-auto leading-relaxed">
+              Every creation is a balance of seasonal ingredients and time-honored techniques.
+            </p>
+          </div>
         </div>
 
-        {/* --- MINIMALIST CATEGORY CIRCLES - SWIPEABLE ON MOBILE --- */}
-        <div className="flex flex-nowrap gap-8 md:gap-14 mb-24 overflow-x-auto pb-8 md:pb-0 scrollbar-hide snap-x snap-mandatory md:flex-wrap md:overflow-visible">
+        {/* --- PREMIUM CATEGORY FILTER --- */}
+        <div className="flex gap-4 md:gap-8 mb-24 overflow-x-auto pb-6 scrollbar-hide">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.name}
               onClick={() => setActiveTab(cat.name)}
-              className="group flex flex-col items-center gap-4 flex-shrink-0 snap-center outline-none"
+              className="flex-shrink-0 group"
             >
-              <div className={`relative w-20 h-20 md:w-24 md:h-24 rounded-full transition-all duration-500 p-1 border ${
-                activeTab === cat.name ? 'border-black' : 'border-transparent group-hover:border-black/20'
+              <div className={`px-8 py-3 rounded-full border transition-all duration-500 flex items-center gap-3 ${
+                activeTab === cat.name ? 'bg-[#1a1a1a] border-[#1a1a1a] text-white' : 'bg-transparent border-zinc-200 text-zinc-500 hover:border-[#1a1a1a]'
               }`}>
-                <div className="w-full h-full rounded-full overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700">
-                  <img src={cat.img} alt={cat.name} className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-700" />
-                </div>
+                <span className="text-[10px] font-bold tracking-widest uppercase">{cat.name}</span>
               </div>
-              <span className={`text-[10px] font-black tracking-[0.2em] uppercase transition-colors whitespace-nowrap ${
-                activeTab === cat.name ? 'text-black' : 'text-zinc-400 group-hover:text-black'
-              }`}>{cat.name}</span>
             </button>
           ))}
         </div>
 
-        {/* --- PRODUCT GRID - 2 CARDS PER ROW ON MOBILE (PERFECT ALIGNMENT) --- */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16 md:gap-x-12 md:gap-y-28">
+        {/* --- PRODUCT GRID --- */}
+        {/* two columns even on smallest devices */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 lg:gap-x-10 gap-y-24">
           {filtered.map((product, idx) => (
             <div
-              id={`product-${product.id}`}
               key={product.id}
-              className={`group flex flex-col h-full transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
-              style={{ transitionDelay: `${idx * 100}ms` }}
+              className={`group flex flex-col h-full justify-between transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
+              style={{ transitionDelay: `${idx * 150}ms` }}
             >
-              {/* IMAGE AREA - FIXED ASPECT */}
-              <div className="relative aspect-[4/5] overflow-hidden bg-zinc-100 mb-8 flex-shrink-0">
+              {/* IMAGE CONTAINER */}
+              <div className="relative aspect-[3/4] overflow-hidden mb-8 bg-zinc-200 flex-shrink-0">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110"
                 />
-               
-                {/* WHATSAPP FLOATING BUTTON */}
-                <button
-                  onClick={() => handleWhatsApp(product.name)}
-                  className="absolute top-6 right-6 z-30 p-4 bg-white/90 backdrop-blur-md text-black rounded-full shadow-xl hover:bg-black hover:text-white transition-all duration-300 transform translate-y-[-10px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
-                  title="Inquiry on WhatsApp"
-                >
-                  <FaWhatsapp size={20} />
-                </button>
-
-                {/* BOTTOM OVERLAY BUTTON */}
-                <div className="absolute inset-x-0 bottom-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-20">
-                    <button className="w-full py-4 bg-black text-white text-[10px] font-black tracking-[0.3em] uppercase hover:bg-zinc-800 transition-colors">
-                        Add to Order — {product.price}
-                    </button>
+                
+                {/* FLOATING ACTION */}
+                <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                   <button 
+                    onClick={() => handleWhatsApp(product.name)}
+                    className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#1a1a1a] shadow-2xl hover:bg-[#C5A358] hover:text-white transition-colors"
+                   >
+                     <FaWhatsapp size={20} strokeWidth={1.5} />
+                   </button>
                 </div>
+
+                {/* OVERLAY ON HOVER */}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               </div>
 
-              {/* TEXT CONTENT - NOW PUSHES BUTTON TO BOTTOM */}
-              <div className="flex-1 flex flex-col">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <p className="text-[9px] font-bold text-zinc-400 tracking-widest uppercase mb-1">{product.category}</p>
-                    <h3 className="text-2xl font-serif text-black group-hover:italic transition-all duration-300 leading-tight">
-                        {product.name}
-                    </h3>
-                  </div>
-                  <div className="h-[1px] w-8 bg-black/10 mt-6 flex-shrink-0" />
+              {/* PRODUCT INFO */}
+              <div className="space-y-3 flex flex-col flex-grow justify-between">
+                <div className="flex justify-between items-baseline">
+                  <span className="text-[10px] font-bold tracking-[0.2em] text-[#C5A358] uppercase">
+                    {product.category}
+                  </span>
+                  <span className="text-sm font-light text-zinc-400 font-mono italic">
+                    {product.price}
+                  </span>
                 </div>
-
-                {/* WhatsApp Button pushed to bottom */}
-                <div className="mt-auto pt-8">
-                  <button
-                    onClick={() => handleWhatsApp(product.name)}
-                    className="w-full flex items-center justify-center gap-3 py-3.5 border-2 border-green-600 hover:bg-green-50 hover:border-green-700 text-green-700 font-medium text-sm rounded-2xl transition-all active:scale-[0.985]"
-                  >
-                    <FaWhatsapp size={20} />
-                    <span>Inquire via WhatsApp</span>
-                  </button>
-                </div>
+                
+                <h3 className="text-3xl font-serif text-[#1a1a1a] group-hover:text-[#C5A358] transition-colors duration-300">
+                  {product.name}
+                </h3>
+                
+                <button 
+                  onClick={() => handleWhatsApp(product.name)}
+                  className="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-zinc-400 group-hover:text-[#1a1a1a] transition-all pt-4"
+                >
+                  <FaWhatsapp size={14} className="text-green-600" />
+                  Request Bespoke Order
+                  <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all" />
+                </button>
               </div>
             </div>
           ))}
         </div>
 
-        {/* --- STARK FOOTER --- */}
-        <div className="mt-40 text-center">
-            <button className="group relative px-15 py-6 bg-black text-white text-[11px] font-black tracking-[0.5em] uppercase overflow-hidden">
-                <span className="relative z-10">View All Products</span>
-                <div className="absolute inset-0 bg-zinc-800 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
+        {/* --- LUXURY FOOTER BUTTON --- */}
+        <div className="mt-40 border-t border-zinc-200 pt-20 text-center">
+            <button className="group relative overflow-hidden">
+                <span className="text-6xl md:text-9xl font-serif italic text-zinc-200 group-hover:text-[#1a1a1a] transition-colors duration-700">
+                  View Full Menu
+                </span>
+                <div className="h-1 w-0 bg-[#C5A358] mx-auto group-hover:w-full transition-all duration-700" />
             </button>
         </div>
       </div>
